@@ -26,4 +26,4 @@ class AddressSerializer(serializers.HyperlinkedModelSerializer):
 class ReviewSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Review
-        fields = ['customer', 'product', 'rating', 'description']
+        fields = ['customer', 'product', 'rating', 'review']

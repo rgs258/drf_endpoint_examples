@@ -30,7 +30,7 @@ from endpoints.viewsets import (
     ReviewViewSet,
 )
 
-app_name = "drf-endpoint-examples"
+display_name = "DRF Endpoint Examples"
 
 
 router = routers.DefaultRouter()
@@ -40,22 +40,18 @@ router.register(r"orders", OrderViewSet)
 router.register(r"addresses", AddressViewSet)
 router.register(r"reviews", ReviewViewSet)
 
-schema_url_patterns = [path(f"{app_name}/api/", include(router.urls))]
+schema_url_patterns = [path(f"api/", include(router.urls))]
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include(router.urls)),
     path(
-        "openapi",
+        "openapi/",
         staff_member_required(
             get_schema_view(
-                title="Data Dictionary",
-                description=(
-                    "Swagger API Documentation for Data Dictionary. See the "
-                    "[Data Dictionary Readme](/data-dictionary/readme) for more "
-                    "information."
-                ),
+                title=display_name,
+                description=f"Swagger API Documentation for {display_name}.",
                 version="1.0.0",
                 patterns=schema_url_patterns,
                 generator_class=AuthSchemaGenerator,
@@ -67,11 +63,11 @@ urlpatterns = [
         "swagger-ui/",
         staff_member_required(
             TemplateView.as_view(
-                template_name="wrds/swagger-ui.html",
+                template_name="swagger-ui.html",
                 extra_context={
-                    "schema_url": "data-dictionary:openapi-schema",
-                    "api_name": "Data Dictionary",
-                    "api_swagger_url": "data-dictionary:swagger-ui",
+                    "schema_url": f"openapi-schema",
+                    "api_name": display_name,
+                    "api_swagger_url": f"swagger-ui",
                 },
             )
         ),
