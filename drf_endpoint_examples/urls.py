@@ -15,9 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import path, include
+from django.views.generic import TemplateView
 from rest_framework import routers
+from rest_framework.schemas import get_schema_view
 
+from drf_endpoint_examples.openapi import AuthSchemaGenerator
 from endpoints.viewsets import (
     CustomerViewSet,
     ProductViewSet,
@@ -26,6 +30,9 @@ from endpoints.viewsets import (
     ReviewViewSet,
 )
 
+app_name = "drf-endpoint-examples"
+
+
 router = routers.DefaultRouter()
 router.register(r"customers", CustomerViewSet)
 router.register(r"products", ProductViewSet)
@@ -33,8 +40,41 @@ router.register(r"orders", OrderViewSet)
 router.register(r"addresses", AddressViewSet)
 router.register(r"reviews", ReviewViewSet)
 
+schema_url_patterns = [path(f"{app_name}/api/", include(router.urls))]
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
+    path(
+        "openapi",
+        staff_member_required(
+            get_schema_view(
+                title="Data Dictionary",
+                description=(
+                    "Swagger API Documentation for Data Dictionary. See the "
+                    "[Data Dictionary Readme](/data-dictionary/readme) for more "
+                    "information."
+                ),
+                version="1.0.0",
+                patterns=schema_url_patterns,
+                generator_class=AuthSchemaGenerator,
+            )
+        ),
+        name="openapi-schema",
+    ),
+    path(
+        "swagger-ui/",
+        staff_member_required(
+            TemplateView.as_view(
+                template_name="wrds/swagger-ui.html",
+                extra_context={
+                    "schema_url": "data-dictionary:openapi-schema",
+                    "api_name": "Data Dictionary",
+                    "api_swagger_url": "data-dictionary:swagger-ui",
+                },
+            )
+        ),
+        name="swagger-ui",
+    ),
 ]
