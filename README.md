@@ -29,6 +29,18 @@ DRF's TokenAuthentication is enabled, so you will need to create a token for the
 done by visiting http://localhost:8000/admin/authtoken/tokenproxy/ and creating a token for the superuser.
 Then you can use the generated client to access the API.
 
+## Making a Client from the OpenAPI Schema
+
+The OpenAPI schema can be used to generate a client. For example, you can use https://app.swaggerhub.com/ to generate
+client libraries.
+
+https://marcomuellner.github.io/openapi-python-generator/quick_start/ looks interesting, but I haven't tried it.
+
+## Notes
+
+- Swaggerhub didn't like endpoints supporting multiple media_types, so I just disabled all but JSONParser via
+  `drf_endpoint_examples.openapi.ChoicesAutoSchema.map_parsers`.
+
 ## Testing
 
 The tests are basically worthless, but they do run. To run them:
