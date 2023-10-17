@@ -29,6 +29,14 @@ DRF's TokenAuthentication is enabled, so you will need to create a token for the
 done by visiting http://localhost:8000/admin/authtoken/tokenproxy/ and creating a token for the superuser.
 Then you can use the generated client to access the API.
 
+## Testing
+
+The tests are basically worthless, but they do run. To run them:
+
+```bash
+pytest
+```
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)

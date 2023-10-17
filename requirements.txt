@@ -5,3 +5,6 @@ drf-api-logger~=1.1.14
 Markdown~=3.5
 PyYAML~=6.0.1
 uritemplate~=4.1.1
+pytest-django
+pytest~=7.4.2
+model-bakery~=1.16.0
